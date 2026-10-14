@@ -529,14 +529,17 @@ def init_kb(
     # Index the KB
     entries_indexed = 0
     index_error: str | None = None
+    db = None
     try:
         config = load_config()  # reload to get the newly added KB
         db = open_index_db(config)
         entries_indexed = KBService(config, db).index_kb(kb_name)
-        db.close()
     except Exception as exc:
         logger.warning("Initial indexing failed for %s", kb_name, exc_info=True)
         index_error = str(exc) or type(exc).__name__
+    finally:
+        if db is not None:
+            db.close()
 
     # Result
     type_names = list(preset.get("types", {}).keys())
