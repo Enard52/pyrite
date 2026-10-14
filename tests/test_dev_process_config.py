@@ -1694,6 +1694,8 @@ class TestTheTestJobIsShardedAndProvesItRanEverything:
         for job in ("gate", "kb", "frontend", "changes"):
             assert "name" not in ci["jobs"][job] or ci["jobs"][job]["name"] == job
 
+
+class TestGitAttributes:
     def test_gitattributes_normalizes_text_to_lf(self):
         path = REPO / ".gitattributes"
         assert path.exists(), ".gitattributes must exist at repo root"
