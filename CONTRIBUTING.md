@@ -42,6 +42,7 @@ Pytest prints the current collected and passed test counts in its summary;
 they change as the project and extensions grow.
 
 See [Setting Up the Development Environment](kb/runbooks/setting-up-dev-environment.md) for troubleshooting.
+Line endings are normalised to LF across platforms via repository `.gitattributes`.
 
 `scripts/setup-checkout.sh` does the venv, the extensions and a repo-local
 `.pyrite/config.yaml` (so `pyrite -k pyrite` means this checkout's `kb/`) in
