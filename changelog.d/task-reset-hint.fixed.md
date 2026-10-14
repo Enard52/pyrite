@@ -1,0 +1,1 @@
+Refusing `task update -s open` on an `in_progress` or `blocked` task now names `pyrite task reset` in the refusal's `suggestion` (CLI JSON and rich, MCP, REST). A `claimed` task gets no hint, because `reset` refuses it (#52).

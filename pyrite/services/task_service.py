@@ -1001,13 +1001,22 @@ def _task_validate_transition(entry: Entry, context: dict) -> Entry:
             allowed_msg = (
                 err.split("Allowed next:", 1)[-1].strip() if "Allowed next:" in err else ""
             )
-            raise ValidationError(
+            refusal = ValidationError(
                 f"Cannot move task from '{old_status}' to '{new_status}'. "
                 f"Allowed next: {allowed_msg} "
                 f"Tasks follow open → claimed → in_progress → done/failed/blocked/review; "
                 f"walk through the intermediate states rather than skipping "
                 f"(or use 'cancelled' to retire an obsolete task from any state)."
             )
+            # Releasing a held task is what `task reset` is for. Only the states
+            # reset accepts get the hint: it refuses `claimed`, and pointing a
+            # caller at a command that refuses is worse than no hint (#52).
+            if new_status == "open" and old_status in ("in_progress", "blocked"):
+                refusal.suggestion = (
+                    "to release a stale claim, run `pyrite task reset <id> -k <kb>` "
+                    "(it clears the assignee and logs why)"
+                )
+            raise refusal
         raise ValidationError(err)
 
     return entry
